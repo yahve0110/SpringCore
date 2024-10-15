@@ -20,7 +20,7 @@ public class CreateUserCommand implements OperationCommand {
         System.out.print("Enter login: ");
         String login = scanner.nextLine();
         if (login == null || login.isEmpty()) {
-            System.out.println("Login cannot be is empty");
+            System.out.println("Login cannot be empty");
             return;
         }
         User user = userService.createUser(login);

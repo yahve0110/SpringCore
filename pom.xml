@@ -18,18 +18,12 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>6.1.5</version> тут может быть более новая версия
+      <version>6.1.5</version>
     </dependency>
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>2.1.1</version> тут может быть более новая версия
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      <version>2.1.1</version>
     </dependency>
   </dependencies>
 </project>
