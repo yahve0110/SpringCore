@@ -1,14 +1,17 @@
 package com.yahve.command;
-import com.yahve.service.impl.AccountServiceImpl;
+
+import com.yahve.service.AccountService;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 @Component
 public class DepositCommand implements OperationCommand {
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountService accountService;
 
-    public DepositCommand(AccountServiceImpl accountServiceImpl) {
-        this.accountServiceImpl = accountServiceImpl;
+    public DepositCommand(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     @Override
@@ -16,7 +19,7 @@ public class DepositCommand implements OperationCommand {
         Scanner scanner = new Scanner(System.in);
 
         int accountId = -1;
-        double amount = -1;
+        BigDecimal amount = BigDecimal.valueOf(-1);
 
         while (accountId < 0) {
             System.out.print("Enter account ID for deposit: ");
@@ -32,13 +35,13 @@ public class DepositCommand implements OperationCommand {
             }
         }
 
-        while (amount <= 0) {
+        while (amount.compareTo(BigDecimal.ZERO) <= 0) {
             System.out.print("Enter amount to deposit: ");
-            if (scanner.hasNextDouble()) {
-                amount = scanner.nextDouble();
-                if (amount <= 0) {
+            if (scanner.hasNextBigDecimal()) {
+                amount = scanner.nextBigDecimal();
+                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                     System.out.println("Deposit amount must be greater than zero.");
-                    amount = -1;
+                    amount = BigDecimal.valueOf(-1);
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid amount (a number).");
@@ -47,10 +50,10 @@ public class DepositCommand implements OperationCommand {
         }
 
         try {
-            accountServiceImpl.deposit(accountId, amount);
+            accountService.deposit(accountId, amount);
             System.out.println("Successfully deposited " + amount + " to account ID " + accountId);
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 

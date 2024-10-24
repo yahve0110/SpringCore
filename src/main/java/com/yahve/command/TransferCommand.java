@@ -3,6 +3,7 @@ package com.yahve.command;
 import com.yahve.service.AccountService;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 @Component
@@ -19,7 +20,7 @@ public class TransferCommand implements OperationCommand {
 
         int fromAccountId = -1;
         int toAccountId = -1;
-        double amount = -1;
+        BigDecimal amount = BigDecimal.valueOf(-1);
 
         while (fromAccountId < 0) {
             System.out.print("Enter from account ID: ");
@@ -49,13 +50,13 @@ public class TransferCommand implements OperationCommand {
             }
         }
 
-        while (amount <= 0) {
+        while (amount.compareTo(BigDecimal.ZERO) <= 0) {
             System.out.print("Enter amount to transfer: ");
-            if (scanner.hasNextDouble()) {
-                amount = scanner.nextDouble();
-                if (amount <= 0) {
+            if (scanner.hasNextBigDecimal()) {
+                amount = scanner.nextBigDecimal();
+                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                     System.out.println("Transfer amount must be greater than zero.");
-                    amount = -1;
+                    amount = BigDecimal.valueOf(-1);
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid amount (a number).");

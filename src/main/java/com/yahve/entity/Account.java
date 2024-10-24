@@ -1,23 +1,25 @@
 package com.yahve.entity;
 
+import java.math.BigDecimal;
+
 public class Account {
 
     private final int id;
     private final int userId;
-    private double moneyAmount;
+    private BigDecimal moneyAmount;
 
-    public Account(int id, int userId, double moneyAmount) {
+    public Account(int id, int userId, BigDecimal moneyAmount) {
         this.id = id;
         this.userId = userId;
         this.moneyAmount = moneyAmount;
     }
 
-    //Getters
+    // Getters
     public int getId() {
         return id;
     }
 
-    public double getMoneyAmount() {
+    public BigDecimal getMoneyAmount() {
         return moneyAmount;
     }
 
@@ -25,21 +27,20 @@ public class Account {
         return userId;
     }
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
+    public void deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Deposit amount must be greater than zero.");
         }
-        moneyAmount += amount;
+        moneyAmount = moneyAmount.add(amount);
     }
 
-    public void withdraw(double amount) {
-        if (amount <= 0) {
+    public void withdraw(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Withdrawal amount must be greater than zero.");
         }
-        if (moneyAmount - amount < 0) {
+        if (moneyAmount.compareTo(amount) < 0) {
             throw new IllegalArgumentException("Insufficient funds. Cannot withdraw " + amount);
-        } else {
-            moneyAmount -= amount;
         }
+        moneyAmount = moneyAmount.subtract(amount);
     }
 }

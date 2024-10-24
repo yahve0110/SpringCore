@@ -1,14 +1,16 @@
 package com.yahve.command;
+
 import com.yahve.service.AccountService;
-import com.yahve.service.impl.AccountServiceImpl;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 @Component
 public class WithdrawCommand implements OperationCommand {
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountService accountServiceImpl;
 
-    public WithdrawCommand(AccountServiceImpl accountServiceImpl) {
+    public WithdrawCommand(AccountService accountServiceImpl) {
         this.accountServiceImpl = accountServiceImpl;
     }
 
@@ -17,7 +19,7 @@ public class WithdrawCommand implements OperationCommand {
         Scanner scanner = new Scanner(System.in);
 
         int accountId = -1;
-        double amount = -1;
+        BigDecimal amount = BigDecimal.valueOf(-1);
 
         while (accountId < 0) {
             System.out.print("Enter account ID for withdrawal: ");
@@ -33,13 +35,13 @@ public class WithdrawCommand implements OperationCommand {
             }
         }
 
-        while (amount <= 0) {
+        while (amount.compareTo(BigDecimal.ZERO) <= 0) {
             System.out.print("Enter amount to withdraw: ");
-            if (scanner.hasNextDouble()) {
-                amount = scanner.nextDouble();
-                if (amount <= 0) {
+            if (scanner.hasNextBigDecimal()) {
+                amount = scanner.nextBigDecimal();
+                if (amount.compareTo(BigDecimal.ZERO) <= 0) {
                     System.out.println("Withdrawal amount must be greater than zero.");
-                    amount = -1;
+                    amount = BigDecimal.valueOf(-1);
                 }
             } else {
                 System.out.println("Invalid input. Please enter a valid amount (a number).");
@@ -51,7 +53,7 @@ public class WithdrawCommand implements OperationCommand {
             accountServiceImpl.withdraw(accountId, amount);
             System.out.println("Amount " + amount + " withdrawn from account ID: " + accountId);
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 

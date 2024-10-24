@@ -1,17 +1,16 @@
 package com.yahve.command;
 
 import com.yahve.service.AccountService;
-import com.yahve.service.impl.AccountServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
 @Component
 public class CloseAccountCommand implements OperationCommand {
-    private final AccountServiceImpl accountServiceImpl;
+    private final AccountService accountServiceImpl;
 
-    public CloseAccountCommand(AccountService accountService, AccountServiceImpl accountServiceImpl) {
-        this.accountServiceImpl = accountServiceImpl;
+    public CloseAccountCommand(AccountService accountService) {
+        this.accountServiceImpl = accountService;
     }
 
     @Override

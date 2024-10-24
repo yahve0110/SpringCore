@@ -2,16 +2,16 @@ package com.yahve.command;
 
 import com.yahve.entity.Account;
 import com.yahve.entity.User;
-import com.yahve.service.impl.UserServiceImpl;
+import com.yahve.service.UserService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class ListUsersCommand implements OperationCommand{
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-    public ListUsersCommand(UserServiceImpl userService) {
+    public ListUsersCommand(UserService userService) {
         this.userService = userService;
     }
 
