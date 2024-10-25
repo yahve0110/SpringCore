@@ -1,18 +1,29 @@
 package com.yahve.entity;
 
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "accounts")
 public class Account {
 
-    private final int id;
-    private final int userId;
-    private BigDecimal moneyAmount;
-
-    public Account(int id, int userId, BigDecimal moneyAmount) {
-        this.id = id;
-        this.userId = userId;
+    public Account(BigDecimal moneyAmount) {
         this.moneyAmount = moneyAmount;
     }
+
+    public Account() {
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "money_amount", nullable = false)
+    private BigDecimal moneyAmount;
 
     // Getters
     public int getId() {
@@ -23,8 +34,12 @@ public class Account {
         return moneyAmount;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void deposit(BigDecimal amount) {

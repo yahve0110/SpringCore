@@ -9,6 +9,5 @@ public class App {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         OperationsConsoleListener consoleListener = context.getBean(OperationsConsoleListener.class);
         new Thread(consoleListener).start();
-
     }
 }
