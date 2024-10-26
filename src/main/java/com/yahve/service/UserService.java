@@ -41,7 +41,7 @@ public class UserService {
     public List<User> getAllUsers() {
         try (Session session = sessionFactory.openSession()) {
             return session
-                    .createQuery("SELECT u FROM User u", User.class)
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.accounts", User.class)
                     .list();
         }
     }
