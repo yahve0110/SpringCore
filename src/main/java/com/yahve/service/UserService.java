@@ -1,43 +1,48 @@
 package com.yahve.service;
 
 import com.yahve.entity.User;
+import com.yahve.helper.TransactionalHelper;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    Map<Integer, User> userMap = new HashMap<Integer, User>();
+    private final SessionFactory sessionFactory;
+    private final TransactionalHelper transactionHelper;
 
-    private int generatedUserId = 1;
-
-
+    public UserService(SessionFactory sessionFactory,
+                       TransactionalHelper transactionHelper) {
+        this.sessionFactory = sessionFactory;
+        this.transactionHelper = transactionHelper;
+    }
 
     public User createUser(String login) {
-        for (User user : userMap.values()) {
-            if (user.getLogin().equals(login)) {
-                throw new IllegalArgumentException("User with login " + login + " already exists");
+        try (Session session = sessionFactory.openSession()) {
+            User existingUser = session
+                    .createQuery("FROM User WHERE login = :login", User.class)
+                    .setParameter("login", login)
+                    .uniqueResult();
+
+            if (existingUser != null) {
+                throw new IllegalArgumentException("User already exists with login: " + login);
             }
         }
-        User user = new User(generatedUserId,login);
-        userMap.put(generatedUserId, user);
-        generatedUserId++;
-        return user;
-    }
 
-    public User findUserById(int id) {
-    User user =  userMap.get(id);
-    if (user == null) {
-        throw new IllegalArgumentException("User with id " + id + " not found");
-    }
-    return user;
-
+        User user = new User(login);
+        return transactionHelper.executeInTransaction(session -> {
+            session.persist(user);
+            return user;
+        });
     }
 
     public List<User> getAllUsers() {
-        return userMap.values().stream().collect(Collectors.toList());
+        try (Session session = sessionFactory.openSession()) {
+            return session
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.accounts", User.class)
+                    .list();
+        }
     }
 }

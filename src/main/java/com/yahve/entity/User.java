@@ -1,17 +1,31 @@
 package com.yahve.entity;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "\"user\"")
 public class User {
-    private final int userId;
-    private final String login;
-    private final List<Account> accounts = new ArrayList<>();
 
-    public User(int userId, String login) {
-        this.userId = userId;
+    public User(){
+    }
+
+    public User( String login) {
         this.login = login;
     }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "\"user_id\"")
+    private int userId;
+
+    @Column(name = "login", unique = true, nullable = false)
+    private  String login;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    private  List<Account> accounts = new ArrayList<>();
 
     //Getters
     public int getUserId() {
@@ -24,10 +38,6 @@ public class User {
 
     public List<Account> getAccounts() {
         return accounts;
-    }
-
-    public void addAccount(Account account) {
-        accounts.add(account);
     }
 
     @Override
